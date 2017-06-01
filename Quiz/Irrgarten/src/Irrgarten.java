@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Irrgarten {
-  static int countermin = 1000;
+  static int countermin = 100000;
 
   public static void main(String[] args) throws IOException {
+    long time = System.currentTimeMillis();
     File file = new File("./res/gross.txt");
     Scanner sc = new Scanner(new FileInputStream(file));
     // feld einlesen
@@ -24,6 +25,7 @@ public class Irrgarten {
       }
       counter++;
     }
+    sc.close();
 
     char[][] feld = new char[counter][x];
 
@@ -35,6 +37,7 @@ public class Irrgarten {
       }
       System.out.println();
     }
+    feld2 = null;
     // start finden
     boolean ende = false;
     for (int i = 0; i < feld.length; i++) {
@@ -54,10 +57,11 @@ public class Irrgarten {
     // start position ausgeben
     System.out.println(starty);
     System.out.println(startx);
-    // lösung berechnen und ausgeben
+    // lÃ¶sung berechnen und ausgeben
     // System.out.println(garten(feld, 1, starty, startx, 299));
-    garten(feld, 1, starty, startx);
-    sc.close();
+
+    System.out.println("Loesung: " + garten(feld, 1, starty, startx));
+    System.out.println("Benoetigte Zeit: " + (System.currentTimeMillis() - time));
   }
 
   public static int garten(char[][] feld, int counter, int y, int x) {
@@ -67,45 +71,49 @@ public class Irrgarten {
     weg[1] = 100000;
     weg[2] = 100000;
     weg[3] = 100000;
-    // System.out.println();
-    // System.out.println(counter);
+    if (counter > countermin) {
+      feld = null;
+      return 100000;
+    }
     if (feld[y][x] == 'X') { // Ende gefunden --> abbruch
       if (counter < countermin) {
-
+        feld = null;
         countermin = counter;
         System.out.println(countermin);
       }
       return counter;
     }
-    if (counter > countermin) {
-      return 100000;
-    }
+
     feld[y][x] = '.'; // auf markiert setzen
-    /*
-     * for (int i = 0; i < feld.length; i++) { for (int k = 0; k < feld[1].length; k++) {
-     * System.out.print(feld[i][k]); } System.out.println(); }
-     */
+
     if ((feld[y][x - 1] != '#') && (feld[y][x - 1] != '.')) {
-      int x1 = x;
-      int y1 = y;
+      int x1 = x, y1 = y;
       int counter2 = counter;
+      x1 -= 1;
+      counter2++;
+      if (counter > countermin) {
+        feld = null;
+        return 100000;
+      }
       char[][] feld3 = new char[feld.length][feld[0].length];
       for (int i = 0; i < feld.length; i++) {
         for (int k = 0; k < feld[0].length; k++) {
           feld3[i][k] = feld[i][k];
         }
       }
-      x1 -= 1;
-      counter2++;
       weg[3] = garten(feld3, counter2, y1, x1);
+      feld3 = null;
       // System.out.println("links");
     }
-    if ((feld[y][x + 1] != '#') && (feld[y][x + 1] != '.')) {// prüfen, wie weitergehen
-      int x1 = x;
-      int y1 = y;
+    if ((feld[y][x + 1] != '#') && (feld[y][x + 1] != '.')) {// prÃ¼fen, wie weitergehen
+      int x1 = x, y1 = y;
       int counter2 = counter;
       x1 += 1;
       counter2++;
+      if (counter > countermin) {
+        feld = null;
+        return 100000;
+      }
       char[][] feld3 = new char[feld.length][feld[0].length];
       for (int i = 0; i < feld.length; i++) {
         for (int k = 0; k < feld[0].length; k++) {
@@ -113,14 +121,18 @@ public class Irrgarten {
         }
       }
       weg[0] = garten(feld3, counter2, y1, x1);
+      feld3 = null;
       // System.out.println("rechts");
     }
     if ((feld[y + 1][x] != '#') && (feld[y + 1][x] != '.')) {
-      int x1 = x;
-      int y1 = y;
+      int x1 = x, y1 = y;
       int counter2 = counter;
       y1 += 1;
       counter2++;
+      if (counter > countermin) {
+        feld = null;
+        return 100000;
+      }
       char[][] feld3 = new char[feld.length][feld[0].length];
       for (int i = 0; i < feld.length; i++) {
         for (int k = 0; k < feld[0].length; k++) {
@@ -128,15 +140,18 @@ public class Irrgarten {
         }
       }
       weg[1] = garten(feld3, counter2, y1, x1);
+      feld3 = null;
       // System.out.println("unten");
     }
-
     if ((feld[y - 1][x] != '#') && (feld[y - 1][x] != '.')) {
-      int x1 = x;
-      int y1 = y;
+      int x1 = x, y1 = y;
       int counter2 = counter;
       y1 -= 1;
       counter2++;
+      if (counter > countermin) {
+        feld = null;
+        return 100000;
+      }
       char[][] feld3 = new char[feld.length][feld[0].length];
       for (int i = 0; i < feld.length; i++) {
         for (int k = 0; k < feld[0].length; k++) {
@@ -144,16 +159,17 @@ public class Irrgarten {
         }
       }
       weg[2] = garten(feld3, counter2, y1, x1);
+      feld3 = null;
       // System.out.println("oben");
     }
-
-
-
-    int min = 0; // kürzester weg von allen benutzen, Vorsicht, es kann auch keiner funktionieren
+    int min = 0; // kÃ¼rzester weg von allen benutzen, Vorsicht, es kann auch keiner funktionieren
     for (int i = 1; i < weg.length; i++) {
       if (weg[i] < weg[min]) {
         min = i;
       }
+    }
+    if (weg[min] == 100000) {
+      feld = null;
     }
     return weg[min];
   }
