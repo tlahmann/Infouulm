@@ -7,7 +7,7 @@ public class Irrgarten {
   static int countermin = 1000;
 
   public static void main(String[] args) throws IOException {
-    File file = new File("./res/klein.txt");
+    File file = new File("./res/gross.txt");
     Scanner sc = new Scanner(new FileInputStream(file));
     // feld einlesen
     char[][] feld2 = new char[500][500];
@@ -61,6 +61,7 @@ public class Irrgarten {
   }
 
   public static int garten(char[][] feld, int counter, int y, int x) {
+	visualize(feld, x, y, 100);
     int[] weg = new int[4];
     weg[0] = 100000; // wenn kein weg gefunden
     weg[1] = 100000;
@@ -155,6 +156,33 @@ public class Irrgarten {
       }
     }
     return weg[min];
+  }
+  
+  /**
+   * Method solely used for visualization purposes. It should <strong>never</strong> be used outside of this class!
+   * 
+   * @param field The current mace being searched
+   * @param x X position of this method call 
+   * @param y Y position of this method call
+   * @param timeout The time to wait before returning
+   */
+  private static void visualize(char[][] field, int x, int y, int timeout){
+    // System.out.printf("Called solver: X: %d, Y: %d\n", x, y);
+    System.out.println("\n\n\n\n\n\n\n\n"); // Console clear hack ;)
+    for (int i = 0; i < field.length; i++) {
+      for (int k = 0; k < field[0].length; k++) {
+    	char print = i==y&&k==x?'P':field[i][k];
+          System.out.print(print);
+      }
+      System.out.println();
+    }
+  	try {
+  	  Thread.sleep(timeout);
+  	} catch (InterruptedException e) {
+  	  System.err.println("Something went wrong while trying to sleep. zZz");
+  	  System.err.println("Maybe you can do something with this message:");
+  	  System.err.print(e.getMessage());
+  	}
   }
 }
 
