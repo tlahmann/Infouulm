@@ -7,7 +7,7 @@ public class Irrgarten {
   static int countermin = 1000;
 
   public static void main(String[] args) throws IOException {
-    File file = new File("C:/Users/jonas/Desktop/test/irrgarten.txt");
+    File file = new File("./res/klein.txt");
     Scanner sc = new Scanner(new FileInputStream(file));
     // feld einlesen
     char[][] feld2 = new char[500][500];
