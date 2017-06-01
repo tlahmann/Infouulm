@@ -1,13 +1,14 @@
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Irrgarten {
-  static int countermin = 250;
+  static int countermin = 10000;
 
   public static void main(String[] args) throws IOException {
-    File file = new File("h:/.win10_profile/Desktop/PVS quiz/irrgarten.txt");
+    File file = new File("C:/Users/jonas/Desktop/test/irrgarten.txt");
     Scanner sc = new Scanner(new FileInputStream(file));
     // feld einlesen
     char[][] feld2 = new char[500][500];
@@ -157,4 +158,5 @@ public class Irrgarten {
     return weg[min];
   }
 }
+
 
